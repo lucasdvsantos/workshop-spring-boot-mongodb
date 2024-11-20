@@ -2,10 +2,15 @@ package com.lucasdvsantos.workshopmongodb.domain;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection="user") // You can also just use @Document, the collection will be mapped automatically based on the name of the class in lower case
 public class User implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Id
 	private String id;
 	private String name;
 	private String email;
