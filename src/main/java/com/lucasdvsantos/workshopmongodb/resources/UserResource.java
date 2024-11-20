@@ -18,36 +18,40 @@ import com.lucasdvsantos.workshopmongodb.dto.UserDTO;
 import com.lucasdvsantos.workshopmongodb.services.UserService;
 
 @RestController
-@RequestMapping(value="/users")
+@RequestMapping(value = "/users")
 public class UserResource {
-	
+
 	@Autowired
 	private UserService service;
-	
-	//@GetMapping you can choose the one below or this one, it's the same thing
-	@RequestMapping(method=RequestMethod.GET)
+
+	// @GetMapping you can choose the one below or this one, it's the same thing
+	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List<UserDTO>> findAll() {
 		List<User> list = service.findAll();
 		List<UserDTO> listDto = list.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDto);
 	}
-	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<UserDTO> findById(@PathVariable String id) {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(new UserDTO(obj));
 	}
-	
-	//@PostMapping you can choose the one below or this one, it's the same thing
-	@RequestMapping(method=RequestMethod.POST)
+
+	// @PostMapping you can choose the one below or this one, it's the same thing
+	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto) {
 		User obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	
-	
-	
+
+	// @DeleteMapping you can choose the one below or this one, it's the same thing
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 
 }
